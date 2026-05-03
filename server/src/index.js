@@ -12,6 +12,17 @@ import { seedIfEmpty } from './seed.js'
 const app = express()
 const PORT = process.env.PORT || 3001
 
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET environment variable is not set')
+  process.exit(1)
+}
+if (!process.env.INVITE_CODE) {
+  console.warn('WARN: INVITE_CODE environment variable is not set. Registration will be impossible.')
+}
+if (!process.env.CORS_ORIGIN) {
+  console.warn('WARN: CORS_ORIGIN environment variable is not set. Defaulting to http://localhost:5173')
+}
+
 app.use(cors({
   origin: (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',').map((s) => s.trim()),
   credentials: true,

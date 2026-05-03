@@ -16,13 +16,15 @@ function signToken(user) {
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
-  const { username, password, inviteCode } = req.body
+  const username = (req.body.username || '').trim()
+  const password = (req.body.password || '').trim()
+  const inviteCode = (req.body.inviteCode || '').trim()
 
   if (!username || !password || !inviteCode) {
     return res.status(400).json({ error: 'username, password, and inviteCode are required' })
   }
 
-  if (inviteCode.toUpperCase() !== (process.env.INVITE_CODE || '').toUpperCase()) {
+  if (inviteCode.toUpperCase() !== (process.env.INVITE_CODE || '').trim().toUpperCase()) {
     return res.status(403).json({ error: 'Invalid invite code' })
   }
 
@@ -53,7 +55,8 @@ router.post('/register', async (req, res) => {
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body
+  const username = (req.body.username || '').trim()
+  const password = (req.body.password || '').trim()
 
   if (!username || !password) {
     return res.status(400).json({ error: 'username and password are required' })

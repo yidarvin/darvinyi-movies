@@ -21,9 +21,11 @@ export async function seedIfEmpty() {
 }
 
 // Allow running directly: node src/seed.js
-seedIfEmpty()
-  .catch((e) => {
-    console.error(e)
-    process.exit(1)
-  })
-  .finally(() => prisma.$disconnect())
+if (import.meta.url === `file://${process.argv[1]}`) {
+  seedIfEmpty()
+    .catch((e) => {
+      console.error(e)
+      process.exit(1)
+    })
+    .finally(() => prisma.$disconnect())
+}
