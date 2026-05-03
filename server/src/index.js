@@ -23,7 +23,15 @@ const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173').spli
 console.log('CORS allowed origins:', allowedOrigins)
 
 app.use(cors({
-  origin: allowedOrigins,
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, mobile apps, server-to-server)
+    if (!origin) return callback(null, true)
+    if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
+      return callback(null, origin)
+    }
+    console.warn(`CORS blocked origin: "${origin}"`)
+    return callback(new Error(`Origin ${origin} not allowed`))
+  },
   credentials: true,
 }))
 app.use(express.json())
