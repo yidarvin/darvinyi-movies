@@ -6,10 +6,9 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-# Build-time env var from Railway → Vite
+# Build-time env var from Railway → Vite (only pass if explicitly set)
 ARG VITE_API_URL
-ENV VITE_API_URL=${VITE_API_URL}
-RUN npm run build
+RUN if [ -n "$VITE_API_URL" ]; then VITE_API_URL=$VITE_API_URL npm run build; else npm run build; fi
 
 # ── Stage 2: serve with nginx ─────────────────────────────────────
 FROM nginx:1.27-alpine
