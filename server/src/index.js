@@ -19,12 +19,11 @@ if (!process.env.JWT_SECRET) {
 if (!process.env.INVITE_CODE) {
   console.warn('WARN: INVITE_CODE environment variable is not set. Registration will be impossible.')
 }
-if (!process.env.CORS_ORIGIN) {
-  console.warn('WARN: CORS_ORIGIN environment variable is not set. Defaulting to http://localhost:5173')
-}
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',').map((s) => s.trim())
+console.log('CORS allowed origins:', allowedOrigins)
 
 app.use(cors({
-  origin: (process.env.CORS_ORIGIN || 'http://localhost:5173').split(',').map((s) => s.trim()),
+  origin: allowedOrigins,
   credentials: true,
 }))
 app.use(express.json())
