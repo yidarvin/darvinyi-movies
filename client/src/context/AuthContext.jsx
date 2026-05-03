@@ -1,7 +1,6 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import api from '../api'
-
-const AuthContext = createContext(null)
+import { AuthContext } from './useAuth'
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
@@ -10,7 +9,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token) {
-      setLoading(false)
+      Promise.resolve().then(() => setLoading(false))
       return
     }
     api
@@ -37,6 +36,4 @@ export function AuthProvider({ children }) {
   )
 }
 
-export function useAuth() {
-  return useContext(AuthContext)
-}
+
